@@ -1,0 +1,9 @@
+name: prod
+
+labels:
+  environment: prod
+  region: lab
+
+argocd:
+  namespace: prod
+  project: prod-default

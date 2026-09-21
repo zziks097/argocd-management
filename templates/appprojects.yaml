@@ -1,0 +1,64 @@
+{{- $clusters := dict -}}
+{{- range $file, $_ := .Files.Glob "clusters/*.yaml" }}
+  {{- $data := fromYaml ($.Files.Get $file) }}
+  {{- $_ := set $clusters $data.name $data }}
+{{- end }}
+
+{{- $roles := dict -}}
+{{- range $file, $_ := .Files.Glob "roles/*.yaml" }}
+  {{- $data := fromYaml ($.Files.Get $file) }}
+  {{- $_ := set $roles $data.name $data }}
+{{- end }}
+
+{{- $clusterName := .Values.cluster -}}
+{{- $cluster := index $clusters $clusterName }}
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: default
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+
+  destinations:
+    - namespace: '*'
+      server: '*'
+
+  sourceRepos:
+    - '*'
+
+  roles:
+  {{- range $groupFile, $_ := $.Files.Glob "groups/*.yaml" }}
+    {{- $group := fromYaml ($.Files.Get $groupFile) }}
+
+    {{- range $binding := $group.bindings }}
+      {{- $pattern := $binding.cluster }}
+      {{- $roleName := $binding.role }}
+      {{- $matches := false }}
+
+      {{- if hasSuffix "*" $pattern }}
+        {{- $prefix := trimSuffix "*" $pattern }}
+        {{- if hasPrefix $clusterName $prefix }}
+          {{- $matches = true }}
+        {{- end }}
+      {{- else if eq $clusterName $pattern }}
+        {{- $matches = true }}
+      {{- end }}
+
+      {{- if $matches }}
+    - name: {{ $roleName }}
+      groups:
+        - {{ $group.name }}
+      policies:
+      {{- range (index $roles $roleName).permissions }}
+        {{- $parts := splitList ":" . }}
+        - p, proj:default:{{ $roleName }}, {{ index $parts 0 }}, {{ index $parts 1 }}, default/*, allow
+      {{- end }}
+      {{- end }}
+
+    {{- end }}
+  {{- end }}

@@ -1,0 +1,9 @@
+name: dev
+
+labels:
+  environment: dev
+  region: lab
+
+argocd:
+  namespace: dev
+  project: dev-default

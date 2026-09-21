@@ -1,0 +1,8 @@
+name: operator
+
+permissions:
+  - applications:get
+  - applications:sync
+  - applications:action
+  - applications:delete
+  - logs:get

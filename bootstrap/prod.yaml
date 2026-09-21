@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-management
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: <ТВОЙ_GIT_REPO>
+    targetRevision: HEAD
+    path: .
+    helm:
+      parameters:
+        - name: cluster
+          value: prod
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true
