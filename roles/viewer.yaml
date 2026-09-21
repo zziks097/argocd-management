@@ -1,0 +1,6 @@
+name: viewer
+
+permissions:
+  - applications:get
+  - applications:list
+  - logs:get

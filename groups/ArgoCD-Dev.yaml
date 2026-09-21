@@ -1,0 +1,5 @@
+name: ArgoCD-Dev
+
+bindings:
+  - cluster: dev
+    role: viewer

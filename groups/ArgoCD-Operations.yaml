@@ -2,8 +2,5 @@ name: ArgoCD-Operations
 
 bindings:
 
-  - cluster: dev
-    role: operator
-
   - cluster: prod
     role: operator
