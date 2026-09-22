@@ -6,3 +6,7 @@ permissions:
   - applications:action
   - applications:delete
   - logs:get
+  - repositories:get
+  - repositories:create
+  - repositories:update
+  - repositories:delete
