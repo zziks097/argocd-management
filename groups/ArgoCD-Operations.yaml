@@ -4,5 +4,6 @@ bindings:
 
   - cluster: prod
     role: operator
-
+  - cluster: dev
+    role: operator
 
