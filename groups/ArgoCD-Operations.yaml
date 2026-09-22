@@ -7,3 +7,8 @@ bindings:
   - cluster: dev
     role: operator
 
+globalPermissions:
+  - repositories:get
+  - repositories:create
+  - repositories:update
+  - repositories:delete
